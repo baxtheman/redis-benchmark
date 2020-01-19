@@ -2,20 +2,17 @@ var random = require('random-string-generator');
 var as = require('async');
 const perf = require('execution-time')();
 
-var redis = require("redis"),
-    client = redis.createClient();
- 
+
+var redis = require("redis");
+var client = redis.createClient();
+
 // if you'd like to select database 3, instead of 0 (default), call
 // client.select(3, function() { /* ... */ });
- 
-client.on("error", function (err) {
-    console.log("Error " + err);
-});
  
 for(let index = 0; index < 1000; index++) {
 
     client.LPUSH('q1', 
-        index + ', ' + random(1000));  
+        index + ', ' + random(2000));  
 }
 
 //at beginning of your code
