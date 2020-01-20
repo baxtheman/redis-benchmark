@@ -4,9 +4,15 @@ const perf = require('execution-time')();
 
 perf.start();
 
-for(let index = 0; index < 1000; index++) {
-    console.log(index + ', ' + random(2000).substring(0,15));
+var tmp = "";
+
+for(let index = 0; index < 3000; index++) {
+
+    tmp = index + ', ' + random(5000).substring(0,15);
+
+    console.log(tmp);
 }
+console.log(tmp);
 
 const results = perf.stop();
 console.log(results.time);  // in milliseconds

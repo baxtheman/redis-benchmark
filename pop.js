@@ -16,9 +16,12 @@ as.forever(
     function(next) {
         // next is suitable for passing to things that need a callback(err [, whatever]);
         // it will result in this function being called again.
-        client.BRPOP('q1', 100, function (list, data) {
-            if (data)
+        client.BRPOP('q1', 0, function (list, data) {
+
+            if (data) {
                 console.log(data.toString().substring(0,15));
+            }
+
             next();
         });  
     },

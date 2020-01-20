@@ -9,10 +9,10 @@ var client = redis.createClient();
 // if you'd like to select database 3, instead of 0 (default), call
 // client.select(3, function() { /* ... */ });
  
-for(let index = 0; index < 1000; index++) {
+for(let index = 0; index < 3000; index++) {
 
     client.LPUSH('q1', 
-        index + ', ' + random(2000));  
+        index + ', ' + random(5000));  
 }
 
 //at beginning of your code
