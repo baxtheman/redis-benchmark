@@ -15,35 +15,50 @@ var array = [];
 //create
 for (let index = 0; index < 3000; index++) {
 
-    tmp = index + ', ' + random(1000).substring(0, 15);
+    tmp = random(1000);
 
     array.push(tmp);
 }
 
+//push
+
 perf.start();
 
-for (let i = 0; i < array.length; i++) {
 
-    client.LPUSH('q1', array[i]);
-}
+//wait
 
-as.forever(
-    function (next) {
-        client.LLEN('q1', function (err, len) {
+as.waterfall([
+    function (callback) {
 
-            if (len == 0) next('sss');
+        for (let i = 0; i < array.length; i++) {
 
-            setTimeout(() => {
-                next();
-            }, 5);
-
-            //next();
-        });
+            client.LPUSH('q1', array[i]);
+        }
+        callback(null);
     },
-    function (err) {
-        const results = perf.stop();
-        console.log(results.time); // in milliseconds
-        client.quit();
-        process.exit(0);
+    function (callback) {
+
+        as.forever(
+
+            function (next) {
+                client.LLEN('q1', function (err, len) {
+
+                    if (len == 0) next('sss');
+
+                    setTimeout(() => {
+                        next();
+                    }, 5);
+
+                    //next();
+                });
+            },
+
+            function (err) {
+                const results = perf.stop();
+                console.log(results.time); // in milliseconds
+                client.quit();
+                process.exit(0);
+            }
+        );
     }
-);
+])

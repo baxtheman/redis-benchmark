@@ -4,11 +4,18 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "simple",
+            "program": "${workspaceFolder}\\simple.js"
+        },
         {
             "type": "node",
             "request": "launch",
             "name": "push",
-            "program": "${workspaceFolder}\\index.js"
+            "program": "${workspaceFolder}\\push.js"
         },
         {
             "type": "node",

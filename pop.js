@@ -17,7 +17,10 @@ as.forever(
         client.BRPOP('q1', 0, function (list, data) {
 
             if (data) {
-                console.log(data.toString().substring(0, 15));
+                var f = data[1].split('').sort();
+                cnt++;
+
+                console.log(cnt + ': ' + f.join().substring(0, 15));
             }
 
             next();
