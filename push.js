@@ -2,6 +2,10 @@ var random = require('random-string-generator');
 var as = require('async');
 const perf = require('execution-time')();
 
+const TextChart = require("text-chart");
+const barChart = new TextChart.BarChart({
+    width: 20
+});
 
 var redis = require("redis");
 var client = redis.createClient();
@@ -26,9 +30,7 @@ perf.start();
 
 client.LPUSH('q1', array, function () {
 
-    const results = perf.stop();
-    console.log(Math.round(results.time)); // in milliseconds
-
+    const results1 = perf.stop();
     //wait
 
     perf.start();
@@ -49,8 +51,11 @@ client.LPUSH('q1', array, function () {
         },
 
         function (err) {
-            const results = perf.stop();
-            console.log(Math.round(results.time)); // in milliseconds
+            const results2 = perf.stop();
+
+            barChart.setData([["lpush", results1.time],["pop", results2.time]]);
+            console.log(barChart.render());
+
             client.quit();
             process.exit(0);
         }
