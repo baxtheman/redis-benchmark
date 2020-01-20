@@ -20,7 +20,7 @@ as.forever(
                 var f = data[1].split('').sort();
                 cnt++;
 
-                console.log(cnt + ': ' + f.join().substring(0, 15));
+                //console.log(cnt + ': ' + f.join().substring(0, 15));
             }
 
             next();
@@ -29,5 +29,6 @@ as.forever(
     function (err) {
         console.error(err);
         client.quit();
+        process.exit(0);
     }
 );

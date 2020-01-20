@@ -10,6 +10,7 @@ var array = [];
 for (let index = 0; index < 3000; index++) {
 
     tmp = random(1000);
+    
     array.push(tmp);
 }
 
@@ -23,7 +24,7 @@ for (let i = 0; i < array.length; i++) {
     var f = array[i].split('').sort();
     cnt++;
 
-    console.log(cnt + ': ' + f.join().substring(0,15));
+   // console.log(cnt + ': ' + f.join().substring(0,15));
 }
 
 const results = perf.stop();
