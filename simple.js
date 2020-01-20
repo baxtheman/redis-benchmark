@@ -7,7 +7,7 @@ const perf = require('execution-time')();
 var array = [];
 
 //create
-for (let index = 0; index < 3000; index++) {
+for (let index = 0; index < 10000; index++) {
 
     tmp = random(1000);
     

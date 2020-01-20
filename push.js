@@ -17,7 +17,7 @@ var client = redis.createClient();
 var array = [];
 
 //create
-for (let index = 0; index < 3000; index++) {
+for (let index = 0; index < 10000; index++) {
 
     tmp = random(1000);
 
@@ -30,8 +30,11 @@ perf.start();
 
 client.LPUSH('q1', array, function () {
 
-    const results1 = perf.stop();
-    //wait
+    // end push
+
+    const results1 = Math.round(perf.stop().time);
+
+    // wait pop
 
     perf.start();
 
@@ -42,18 +45,14 @@ client.LPUSH('q1', array, function () {
 
                 if (len == 0) next('sss');
 
-                setTimeout(() => {
-                    next();
-                }, 10);
-
-                //next();
+                setTimeout(next, 10);
             });
         },
 
         function (err) {
-            const results2 = perf.stop();
+            const results2 = Math.round(perf.stop().time);
 
-            barChart.setData([["lpush", results1.time],["pop", results2.time]]);
+            barChart.setData([["lpush", results1],["pop", results2]]);
             console.log(barChart.render());
 
             client.quit();
