@@ -23,5 +23,12 @@
             "name": "pop",
             "program": "${workspaceFolder}\\pop.js"
         }
+        ,
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "pop-py",
+            "program": "${workspaceFolder}\\pop.py"
+        }
     ]
 }
