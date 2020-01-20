@@ -24,31 +24,35 @@ for (let index = 0; index < 3000; index++) {
 
 perf.start();
 
-var m = client.multi();
-m.LPUSH('q1', array);
-m.exec();
+client.LPUSH('q1', array, function () {
 
-//wait
+    const results = perf.stop();
+    console.log(Math.round(results.time)); // in milliseconds
 
-as.forever(
+    //wait
 
-    function (next) {
-        client.LLEN('q1', function (err, len) {
+    perf.start();
 
-            if (len == 0) next('sss');
+    as.forever(
 
-            setTimeout(() => {
-                next();
-            }, 5);
+        function (next) {
+            client.LLEN('q1', function (err, len) {
 
-            //next();
-        });
-    },
+                if (len == 0) next('sss');
 
-    function (err) {
-        const results = perf.stop();
-        console.log(results.time); // in milliseconds
-        client.quit();
-        process.exit(0);
-    }
-);
+                setTimeout(() => {
+                    next();
+                }, 10);
+
+                //next();
+            });
+        },
+
+        function (err) {
+            const results = perf.stop();
+            console.log(Math.round(results.time)); // in milliseconds
+            client.quit();
+            process.exit(0);
+        }
+    );
+});

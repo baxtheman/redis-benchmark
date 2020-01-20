@@ -18,14 +18,17 @@ for (let index = 0; index < 3000; index++) {
 
 perf.start();
 var cnt = 0;
+var f = null;
 
 for (let i = 0; i < array.length; i++) {
 
-    var f = array[i].split('').sort();
+    f = array[i].split('').sort();
     cnt++;
 
    // console.log(cnt + ': ' + f.join().substring(0,15));
 }
 
+console.log(f.join().substring(0,1));
+
 const results = perf.stop();
-console.log(results.time); // in milliseconds
+console.log(Math.round(results.time)); // in milliseconds
