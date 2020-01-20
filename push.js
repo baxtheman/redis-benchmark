@@ -24,7 +24,9 @@ for (let index = 0; index < 3000; index++) {
 
 perf.start();
 
-client.LPUSH('q1', array);
+var m = client.multi();
+m.LPUSH('q1', array);
+m.exec();
 
 //wait
 
