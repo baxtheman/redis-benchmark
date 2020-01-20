@@ -24,41 +24,29 @@ for (let index = 0; index < 3000; index++) {
 
 perf.start();
 
+client.LPUSH('q1', array);
 
 //wait
 
-as.waterfall([
-    function (callback) {
+as.forever(
 
-        for (let i = 0; i < array.length; i++) {
+    function (next) {
+        client.LLEN('q1', function (err, len) {
 
-            client.LPUSH('q1', array[i]);
-        }
-        callback(null);
+            if (len == 0) next('sss');
+
+            setTimeout(() => {
+                next();
+            }, 5);
+
+            //next();
+        });
     },
-    function (callback) {
 
-        as.forever(
-
-            function (next) {
-                client.LLEN('q1', function (err, len) {
-
-                    if (len == 0) next('sss');
-
-                    setTimeout(() => {
-                        next();
-                    }, 5);
-
-                    //next();
-                });
-            },
-
-            function (err) {
-                const results = perf.stop();
-                console.log(results.time); // in milliseconds
-                client.quit();
-                process.exit(0);
-            }
-        );
+    function (err) {
+        const results = perf.stop();
+        console.log(results.time); // in milliseconds
+        client.quit();
+        process.exit(0);
     }
-])
+);
