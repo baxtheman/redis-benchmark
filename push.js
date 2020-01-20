@@ -8,27 +8,42 @@ var client = redis.createClient();
 
 // if you'd like to select database 3, instead of 0 (default), call
 // client.select(3, function() { /* ... */ });
- 
-for(let index = 0; index < 3000; index++) {
 
-    client.LPUSH('q1', 
-        index + ', ' + random(5000));  
+
+var array = [];
+
+//create
+for (let index = 0; index < 3000; index++) {
+
+    tmp = index + ', ' + random(1000).substring(0, 15);
+
+    array.push(tmp);
 }
 
-//at beginning of your code
 perf.start();
 
+for (let i = 0; i < array.length; i++) {
+
+    client.LPUSH('q1', array[i]);
+}
+
 as.forever(
-    function(next) {
-        client.LLEN('q1', function(err,len) {
+    function (next) {
+        client.LLEN('q1', function (err, len) {
+
             if (len == 0) next('sss');
-            next();
+
+            setTimeout(() => {
+                next();
+            }, 5);
+
+            //next();
         });
     },
-    function(err) {
+    function (err) {
         const results = perf.stop();
-        console.log(results.time);  // in milliseconds
+        console.log(results.time); // in milliseconds
         client.quit();
+        process.exit(0);
     }
 );
-    

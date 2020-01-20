@@ -1,18 +1,27 @@
 var random = require('random-string-generator');
 var as = require('async');
+var redis = require("redis");
 const perf = require('execution-time')();
+
+
+var array = [];
+
+//create
+for (let index = 0; index < 3000; index++) {
+
+    tmp = index + ', ' + random(1000).substring(0, 15);
+
+    array.push(tmp);
+}
+
+//log
 
 perf.start();
 
-var tmp = "";
+for (let i = 0; i < array.length; i++) {
 
-for(let index = 0; index < 3000; index++) {
-
-    tmp = index + ', ' + random(5000).substring(0,15);
-
-    console.log(tmp);
+    console.log(array[i]);
 }
-console.log(tmp);
 
 const results = perf.stop();
-console.log(results.time);  // in milliseconds
+console.log(results.time); // in milliseconds
