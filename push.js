@@ -9,6 +9,7 @@ const barChart = new TextChart.BarChart({
     width: 20
 });
 
+var N = 1000;
 var redis = require("redis");
 var client = redis.createClient({});
 
@@ -19,7 +20,7 @@ let content = fs.readFileSync('./data.txt', 'utf-8', 'r+');
 var array = [];
 
 //create
-for (let index = 0; index < 1000; index++) {
+for (let index = 0; index < N; index++) {
 
     //var tmp = random(1000);
     var tmp = content.toString();
@@ -52,7 +53,8 @@ var waitpop = function () {
             const results2 = Math.round(perf.stop().time);
 
             barChart.setData([
-                ["pop", results2]
+                ["pop", results2],
+                ["fps",  N / (results2/1000)]
             ]);
             console.log(barChart.render());
 
@@ -71,9 +73,10 @@ perf.start();
 
 async.each(array, function (elem, callback) {
 
-    client.LPUSH('q1', elem);
-    callback();
-
+    client.LPUSH('q1', elem, () => {
+        client.PUBLISH('q1',true);
+        callback();
+    });
 }, function (err) {
     console.log('wait...');
     waitpop();
