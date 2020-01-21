@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StackExchange.Redis;
+using ServiceStack;
+using ServiceStack.Logging;
+using ServiceStack.Redis;
 
 namespace ConsoleApp1
 {
@@ -11,17 +13,18 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
+            LogManager.LogFactory = new ConsoleLogFactory();
+            var log = LogManager.LogFactory.GetLogger("redistest");
 
-            IDatabase db = redis.GetDatabase();
 
-            while (true) {
+            var redisManager = new RedisManagerPool("localhost?connectTimeout=1000");
 
-                RedisValue v = db.ListRightPop("q1");
+            using (var redis = redisManager.GetClient()) {
 
-                if (v.HasValue) {
+                do {
+                    var item = redis.BlockingPopItemFromList("q1", null);
 
-                    String _v = v.ToString();
+                    String _v = item.ToString();
                     char[] _c = _v.ToCharArray();
 
                     Array.Sort<char>(_c);
@@ -29,7 +32,8 @@ namespace ConsoleApp1
                     if (_c[0] == null) {
                         System.Console.WriteLine(_c[0]);
                     }
-                }
+
+                } while (true);
             }
 
         }
