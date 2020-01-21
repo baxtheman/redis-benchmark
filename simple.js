@@ -9,8 +9,8 @@ var array = [];
 //create
 for (let index = 0; index < 10000; index++) {
 
-    tmp = random(1000);
-    
+    tmp = random(10000);
+
     array.push(tmp);
 }
 
@@ -25,10 +25,10 @@ for (let i = 0; i < array.length; i++) {
     f = array[i].split('').sort();
     cnt++;
 
-   // console.log(cnt + ': ' + f.join().substring(0,15));
+    //console.log(cnt + ': ' + f.join().substring(0, 15));
 }
 
-console.log(f.join().substring(0,1));
+console.log(f.join().substring(0, 1));
 
 const results = perf.stop();
 console.log(Math.round(results.time)); // in milliseconds
