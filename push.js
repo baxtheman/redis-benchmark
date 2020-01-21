@@ -62,7 +62,7 @@ var waitpop = function () {
 
 perf.start();
 
-client.LPUSH('q1', array, function() {
+client.LPUSH('q1', array, function () {
     console.log('wait...');
     waitpop();
 });
