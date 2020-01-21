@@ -2,14 +2,15 @@ var random = require('random-string-generator');
 var as = require('async');
 var redis = require("redis");
 const perf = require('execution-time')();
+const fs = require('fs');
 
-
+let content = fs.readFileSync('./data.txt', 'utf-8', 'r+');
 var array = [];
 
 //create
-for (let index = 0; index < 10000; index++) {
+for (let index = 0; index < 1000; index++) {
 
-    tmp = random(10000);
+    tmp = content.toString();
 
     array.push(tmp);
 }

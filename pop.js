@@ -17,6 +17,7 @@ as.forever(
         client.BRPOP('q1', 50, function (list, data) {
 
             if (data) {
+
                 var f = data[1].split('').sort();
                 cnt++;
 
