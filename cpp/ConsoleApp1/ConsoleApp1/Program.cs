@@ -10,6 +10,8 @@ namespace ConsoleApp1
 {
     class Program
     {
+        static int cnt = 0;
+
         static void  Main(string[] args)
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
@@ -41,6 +43,10 @@ namespace ConsoleApp1
 
                 if (_c[0] == null) {
                     System.Console.WriteLine(_c[0]);
+                }
+
+                if ((cnt++)%50 == 0) {
+                    System.Console.Write(".");
                 }
 
                 return true;
