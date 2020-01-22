@@ -4,11 +4,16 @@ var redis = require("redis");
 const perf = require('execution-time')();
 const fs = require('fs');
 
-let content = fs.readFileSync('./data.txt', 'utf-8', 'r+');
+var myArgs = process.argv.slice(2);
+
+var N = myArgs[0] || 10000;
+var __FILE = myArgs[1] || './data.txt';
+
+let content = fs.readFileSync(__FILE, 'utf-8', 'r+');
 var array = [];
 
 //create
-for (let index = 0; index < 1000; index++) {
+for (let index = 0; index < N; index++) {
 
     tmp = content.toString();
 
@@ -16,6 +21,7 @@ for (let index = 0; index < 1000; index++) {
 }
 
 //log
+console.log('wait...' + N + ' x ' + content.length + ' ' + __FILE);
 
 perf.start();
 var cnt = 0;
@@ -26,6 +32,7 @@ for (let i = 0; i < array.length; i++) {
     f = array[i].split('').sort();
     cnt++;
 
+    if (cnt % 50 == 0) process.stdout.write(".");
     //console.log(cnt + ': ' + f.join().substring(0, 15));
 }
 

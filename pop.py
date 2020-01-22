@@ -12,7 +12,7 @@ while True:
         _a.sort()
         con += 1
 
-        if con % 50 == 0:
+        if (con % 50 == 0) and (len(_a) > 0):
             print(".", end="", flush=True)
 
     except Exception:

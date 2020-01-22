@@ -41,7 +41,7 @@ namespace ConsoleApp1
 
                 Array.Sort<char>(_c);
 
-                if (_c[0] == null) {
+                if (_c[0] == 999) {
                     System.Console.WriteLine(_c[0]);
                 }
 
