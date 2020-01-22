@@ -3,6 +3,7 @@ var as = require('async');
 const perf = require('execution-time')();
 var async = require('async');
 const fs = require('fs');
+const cliProgress = require('cli-progress');
 
 const TextChart = require("text-chart");
 const barChart = new TextChart.BarChart({
@@ -20,19 +21,28 @@ var waitpop = function () {
     // wait pop
 
     perf.start();
+    const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+    bar1.start(N, N);
 
     as.forever(
 
         function (next) {
+            var prev = 0;
             client.LLEN('q1', function (err, len) {
 
                 if (len == 0) next('sss');
+                
+                if (prev != len) {
+                    bar1.update(len);
+                    prev = len;
+                }
 
-                setTimeout(next, 10);
+                setTimeout(next, 1000);
             });
         },
 
         function (err) {
+            bar1.stop();
             const results2 = Math.round(perf.stop().time);
 
             barChart.setData([
