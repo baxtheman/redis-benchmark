@@ -18,6 +18,7 @@ as.forever(
                 var f = data[1].split('').sort();
                 cnt++;
 
+                if (cnt % 50 == 0) process.stdout.write(".");
                 //console.log(cnt + ': ' + f.join().substring(0, 15));
             }
 

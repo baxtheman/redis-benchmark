@@ -58,6 +58,6 @@ for (let index = 0; index < N; index++) {
     });
 }
 
-console.log('wait...');
+console.log('wait...' + N + ' x ' + content.length);
 waitpop();
 
