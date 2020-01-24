@@ -22,6 +22,12 @@
             "request": "launch",
             "name": "pop",
             "program": "${workspaceFolder}\\pop.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "controller",
+            "program": "${workspaceFolder}\\controller.js"
         }
         ,
         {

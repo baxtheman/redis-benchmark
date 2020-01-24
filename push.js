@@ -1,4 +1,3 @@
-var random = require('random-string-generator');
 var as = require('async');
 const perf = require('execution-time')();
 var async = require('async');
@@ -12,7 +11,7 @@ const barChart = new TextChart.BarChart({
 
 var myArgs = process.argv.slice(2);
 
-var N = myArgs[0] || 10000;
+var N = myArgs[0] || 1000;
 var __FILE = myArgs[1] || './data.txt';
 
 var redis = require("redis");
@@ -71,14 +70,14 @@ var waitpop = function () {
 
 let content = fs.readFileSync(__FILE, 'utf-8', 'r+');
 
-perf.start();
-
 for (let index = 0; index < N; index++) {
 
     client.LPUSH('q1', content.toString(), () => {
+
+        //c# client needs this
         client.PUBLISH('q1', true);
     });
 }
 
-console.log('wait...' + N + ' x ' + content.length + ' ' + __FILE);
+console.log('wait...' + N + ' x ' + content.length + ' bytes of ' + __FILE);
 waitpop();

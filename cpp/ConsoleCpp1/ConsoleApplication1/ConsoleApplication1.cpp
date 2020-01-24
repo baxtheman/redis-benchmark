@@ -37,15 +37,15 @@ int main()
 
 	spdlog::info("Welcome to spdlog!");
 
-	cpp_redis::client client;
+	//cpp_redis::client client;
 
-	client.connect();
+	//client.connect();
 
 	//signal(SIGINT, &sigint_handler);
 
 	cpp_redis::subscriber sub;
 
-	sub.connect("127.0.0.1", 6379);
+	sub.connect();
 
 	sub.subscribe("q1", [](const std::string& chan, const std::string& msg) {
 		std::cout << "MESSAGE " << chan << ": " << msg << std::endl;
@@ -55,7 +55,7 @@ int main()
 	std::unique_lock<std::mutex> l(mtx);
 	should_exit.wait(l);
 
-	client.disconnect();
+	sub.disconnect();
 	WSACleanup();
 	
 	return 0;

@@ -6,7 +6,7 @@ const fs = require('fs');
 
 var myArgs = process.argv.slice(2);
 
-var N = myArgs[0] || 10000;
+var N = myArgs[0] || 1000;
 var __FILE = myArgs[1] || './data.txt';
 
 let content = fs.readFileSync(__FILE, 'utf-8', 'r+');
