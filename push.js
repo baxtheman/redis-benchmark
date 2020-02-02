@@ -72,12 +72,14 @@ let content = fs.readFileSync(__FILE, 'utf-8', 'r+');
 
 for (let index = 0; index < N; index++) {
 
-    client.LPUSH('q1', content.toString(), () => {
+    client.LPUSH('q1', content.toString(), (ret) => {
 
         //c# client needs this
         client.PUBLISH('q1', true);
     });
 }
+
+client.SAVE();
 
 console.log('wait...' + N + ' x ' + content.length + ' bytes of ' + __FILE);
 waitpop();

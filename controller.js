@@ -1,12 +1,9 @@
 var as = require('async');
 var child_process = require('child_process');
-
-var redis = require("redis"),
-    client = redis.createClient();
-
-client2 = redis.createClient();
-
+var myArgs = process.argv.slice(2);
 var processes = [];
+
+//// PROCESSES /////
 
 var killProcesses = function () {
     console.log('killing', processes.length);
@@ -23,6 +20,14 @@ process.on('SIGINT', () => {
 process.on('SIGTERM', () => {
     killProcesses(); process.exit(0);}); // catch kill
 
+    
+startProcesses(myArgs[0] || 0);
+
+//// REDIS SUBSCRIBE /////
+
+var redis = require("redis"),
+    client = redis.createClient();
+
 client.SUBSCRIBE('proc');
 
 client.on('message', function (channel, message) {
@@ -37,16 +42,19 @@ client.on('message', function (channel, message) {
     var N = parseInt(message);
 
     if ("proc" === channel && N !== NaN) {
-
-        killProcesses();
-
-        console.log('starting ', N);
-
-        Array.from(Array(N)).forEach((x, i) => {
-
-            processes.push(child_process.fork('pop.js'));
-        });
+        
+        startProcesses(N);
     }
 });
 
+function startProcesses(_n) {
+    killProcesses();
+    console.log('starting ', _n);
+    
+    Array.from(Array(_n)).forEach((x, i) => {
 
+        processes.push(child_process.fork('pop.js'));
+    });
+
+    return processes;
+}

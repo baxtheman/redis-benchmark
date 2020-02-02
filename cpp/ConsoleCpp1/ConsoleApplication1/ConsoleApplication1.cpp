@@ -37,9 +37,11 @@ int main()
 
 	spdlog::info("Welcome to spdlog!");
 
-	//cpp_redis::client client;
+	cpp_redis::client client;
 
-	//client.connect();
+	client.connect();
+
+	spdlog::info("client {}", client.is_connected());
 
 	//signal(SIGINT, &sigint_handler);
 
@@ -47,8 +49,12 @@ int main()
 
 	sub.connect();
 
-	sub.subscribe("q1", [](const std::string& chan, const std::string& msg) {
-		std::cout << "MESSAGE " << chan << ": " << msg << std::endl;
+	spdlog::info("sub {}", sub.is_connected());
+
+	sub.subscribe("q1", 
+		[](const std::string& chan, const std::string& msg) {
+		
+		spdlog::info("message {} {} ", chan,msg);
 	});
 
 	std::mutex mtx;
