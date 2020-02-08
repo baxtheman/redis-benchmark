@@ -1,18 +1,15 @@
+const { createWorker } = require('tesseract.js');
 var as = require('async');
 
-var redis = require("redis"),
-    client = redis.createClient({
-    });
-
+var client = require("redis").createClient({});
 var cnt = 0;
 
 as.forever(
     function (next) {
         client.BRPOP('images1', 0, function (list, data) {
             
-            console.log(data);
             if (data) {
-
+                console.log(data);
 
                 cnt++;
 

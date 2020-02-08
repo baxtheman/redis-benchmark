@@ -4,27 +4,70 @@ var async = require('async');
 const fs = require('fs');
 const path = require('path');
 const cliProgress = require('cli-progress');
+var redis = require("redis");
 
 const TextChart = require("text-chart");
 const barChart = new TextChart.BarChart({
     width: 20
 });
 
-var myArgs = process.argv.slice(2);
-
-var __DIR = myArgs[0] || './';
-var N = 0;
-
-var redis = require("redis");
 var client = redis.createClient({});
 
+var myArgs = process.argv.slice(2);
+var __DIR = myArgs[0] || './';
+
 const REDIS_QUEUE = 'images1';
-//push
-// redis-benchmark.exe -t lpush,rpop -d 1000 -n 10000 -c 1
+var N = 0;
 
-var waitpop = function () {
-    // wait pop
+client.FLUSHALL();
 
+as.waterfall([
+    sendFiles,
+    waitpop
+]);
+
+function sendFiles(callback) {
+
+    //passsing directoryPath and callback function
+    fs.readdir(__DIR, function (err, files) {
+
+        //handling error
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        }
+
+        const images = files.filter(el => /\.jpg$/.test(el));
+        N = images.length;
+        var KEYP = 'image:';
+
+        //listing all files using forEach
+        images.forEach(function (file) {
+
+            var key = KEYP + file;
+            var content = fs.readFileSync(
+                path.join(__DIR, file));
+
+            client.HMSET(key, {
+                file: file,
+                content: content
+            }, (err, reply) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+
+            client.LPUSH(REDIS_QUEUE, key, () => {
+
+                //c# client needs this
+                client.PUBLISH(REDIS_QUEUE, true);
+            });
+        });
+
+        callback(null);
+    });
+}
+
+function waitpop() {
     perf.start();
 
     const bar1 = new cliProgress.SingleBar({
@@ -67,46 +110,3 @@ var waitpop = function () {
         }
     );
 }
-
-///////////////////////////
-
-client.FLUSHALL();
-
-//passsing directoryPath and callback function
-fs.readdir(__DIR, function (err, files) {
-
-    //handling error
-    if (err) {
-        return console.log('Unable to scan directory: ' + err);
-    }
-
-    const images = files.filter(el => /\.jpg$/.test(el));
-    N = images.length;
-    var KEYP = 'image:';
-
-    //listing all files using forEach
-    images.forEach(function (file) {
-
-        var key = KEYP + file;
-        var content = fs.readFileSync(path.join(__DIR, file));
-
-        client.HMSET(key, {
-            file: file,
-            content: content
-        }, (err, reply) => {
-            if (err) {
-                console.error(err);
-            }
-        });
-
-        //debugger;
-        client.LPUSH(REDIS_QUEUE, key, () => {
-
-            //c# client needs this
-            client.PUBLISH(REDIS_QUEUE, true);
-        });
-    });
-
-    console.log('wait...' + images.length);
-    waitpop();
-});
