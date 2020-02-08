@@ -2,6 +2,7 @@ var as = require('async');
 const perf = require('execution-time')();
 var async = require('async');
 const fs = require('fs');
+const path = require('path');
 const cliProgress = require('cli-progress');
 
 const TextChart = require("text-chart");
@@ -11,12 +12,13 @@ const barChart = new TextChart.BarChart({
 
 var myArgs = process.argv.slice(2);
 
-var N = myArgs[0] || 1000;
-var __FILE = myArgs[1] || './data.txt';
+var __DIR = myArgs[0] || './';
+var N = 0;
 
 var redis = require("redis");
 var client = redis.createClient({});
 
+const REDIS_QUEUE = 'images1';
 //push
 // redis-benchmark.exe -t lpush,rpop -d 1000 -n 10000 -c 1
 
@@ -37,7 +39,7 @@ var waitpop = function () {
 
         function (next) {
             var prev = 0;
-            client.LLEN('q1', function (err, len) {
+            client.LLEN(REDIS_QUEUE, function (err, len) {
 
                 if (len == 0) next('sss');
 
@@ -68,16 +70,43 @@ var waitpop = function () {
 
 ///////////////////////////
 
-let content = fs.readFileSync(__FILE, 'utf-8', 'r+');
+client.FLUSHALL();
 
-for (let index = 0; index < N; index++) {
+//passsing directoryPath and callback function
+fs.readdir(__DIR, function (err, files) {
 
-    client.LPUSH('q1', content.toString(), () => {
+    //handling error
+    if (err) {
+        return console.log('Unable to scan directory: ' + err);
+    }
 
-        //c# client needs this
-        client.PUBLISH('q1', true);
+    const images = files.filter(el => /\.jpg$/.test(el));
+    N = images.length;
+    var KEYP = 'image:';
+
+    //listing all files using forEach
+    images.forEach(function (file) {
+
+        var key = KEYP + file;
+        var content = fs.readFileSync(path.join(__DIR, file));
+
+        client.HMSET(key, {
+            file: file,
+            content: content
+        }, (err, reply) => {
+            if (err) {
+                console.error(err);
+            }
+        });
+
+        //debugger;
+        client.LPUSH(REDIS_QUEUE, key, () => {
+
+            //c# client needs this
+            client.PUBLISH(REDIS_QUEUE, true);
+        });
     });
-}
 
-console.log('wait...' + N + ' x ' + content.length + ' bytes of ' + __FILE);
-waitpop();
+    console.log('wait...' + images.length);
+    waitpop();
+});

@@ -36,5 +36,13 @@
             "name": "pop-py",
             "program": "${workspaceFolder}\\sort-pop.py"
         }
+        ,
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "images-push",
+            "program": "${workspaceFolder}\\images-push.js",
+            "args": ["C:\\Users\\Admin\\Desktop\\bulkr"]
+        }
     ]
 }
