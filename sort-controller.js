@@ -44,7 +44,7 @@ client.on('message', function (channel, message) {
 
         Array.from(Array(N)).forEach((x, i) => {
 
-            processes.push(child_process.fork('pop.js'));
+            processes.push(child_process.fork('sort-pop.js'));
         });
     }
 });

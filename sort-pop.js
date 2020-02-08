@@ -1,14 +1,14 @@
 var as = require('async');
 
 var redis = require("redis"),
-    client = redis.createClient();
-client2 = redis.createClient();
+    client = redis.createClient({
+    });
 
 var cnt = 0;
 
 as.forever(
     function (next) {
-        client2.BRPOP('q1', 0, function (list, data) {
+        client.BRPOP('q1', 0, function (list, data) {
 
             if (data) {
 
