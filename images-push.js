@@ -1,15 +1,11 @@
-var as = require('async');
 const perf = require('execution-time')();
 var async = require('async');
 const fs = require('fs');
 const path = require('path');
 const cliProgress = require('cli-progress');
 var redis = require("redis");
-
 const TextChart = require("text-chart");
-const barChart = new TextChart.BarChart({
-    width: 20
-});
+
 
 var client = redis.createClient({});
 
@@ -21,10 +17,13 @@ var N = 0;
 
 client.FLUSHALL();
 
-as.waterfall([
+async.waterfall([
     sendFiles,
     waitpop
 ]);
+
+
+///
 
 function sendFiles(callback) {
 
@@ -40,36 +39,44 @@ function sendFiles(callback) {
         N = images.length;
         var KEYP = 'image:';
 
-        //listing all files using forEach
-        images.forEach(function (file) {
+        async.each(images, function (file, eachfn) {
 
             var key = KEYP + file;
             var content = fs.readFileSync(
                 path.join(__DIR, file));
 
-            client.HMSET(key, {
-                file: file,
-                content: content
-            }, (err, reply) => {
-                if (err) {
-                    console.error(err);
-                }
-            });
+            async.waterfall([
+                (callback) =>
+                    client.HMSET(key, {
+                            file: file,
+                            content: content
+                        }, 
+                        () => callback()
+                    ),
 
-            client.LPUSH(REDIS_QUEUE, key, () => {
+                (callback) =>
+                    client.LPUSH(REDIS_QUEUE, key,
+                        () => callback()),
 
-                //c# client needs this
-                client.PUBLISH(REDIS_QUEUE, true);
-            });
+                (callback) =>
+                    client.PUBLISH(REDIS_QUEUE, true,
+                        () => callback())
+            ], () => 
+                eachfn());
         });
 
-        callback(null);
+        console.log('all files sent');
+        if (callback) callback(null);
     });
 }
 
 function waitpop() {
     perf.start();
 
+    const barChart = new TextChart.BarChart({
+        width: 20
+    });
+    
     const bar1 = new cliProgress.SingleBar({
         clearOnComplete: true,
         stream: process.stdout,
@@ -78,13 +85,13 @@ function waitpop() {
 
     bar1.start(N, N);
 
-    as.forever(
+    async.forever(
 
         function (next) {
             var prev = 0;
             client.LLEN(REDIS_QUEUE, function (err, len) {
 
-                if (len == 0) next('sss');
+                if (len == 0) next('len=0');
 
                 if (prev != len) {
                     bar1.update(len);
@@ -105,6 +112,7 @@ function waitpop() {
             ]);
             console.log(barChart.render());
 
+            console.log('QUIT ' + err);
             client.quit();
             process.exit(0);
         }
