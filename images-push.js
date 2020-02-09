@@ -19,9 +19,9 @@ client.FLUSHALL();
 
 async.waterfall([
     sendFiles,
-    waitpop
+    waitpop,
+    (wfn) => setTimeout(wfn, 99999)
 ]);
-
 
 ///
 
@@ -59,7 +59,7 @@ function sendFiles(callback) {
                         () => callback()),
 
                 (callback) =>
-                    client.PUBLISH(REDIS_QUEUE, true,
+                    client.PUBLISH('images-push', true,
                         () => callback())
             ], () => 
                 eachfn());
