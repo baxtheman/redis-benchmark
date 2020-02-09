@@ -1,7 +1,8 @@
 var as = require('async');
 
 var redis = require("redis"),
-    client = redis.createClient();
+    client = redis.createClient({
+    });
 
 var cnt = 0;
 

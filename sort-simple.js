@@ -1,4 +1,3 @@
-var random = require('random-string-generator');
 var as = require('async');
 var redis = require("redis");
 const perf = require('execution-time')();

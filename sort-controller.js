@@ -42,8 +42,15 @@ client.on('message', function (channel, message) {
     var N = parseInt(message);
 
     if ("proc" === channel && N !== NaN) {
-        
-        startProcesses(N);
+
+        killProcesses();
+
+        console.log('starting ', N);
+
+        Array.from(Array(N)).forEach((x, i) => {
+
+            processes.push(child_process.fork('sort-pop.js'));
+        });
     }
 });
 

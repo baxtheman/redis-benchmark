@@ -8,33 +8,40 @@
             "type": "node",
             "request": "launch",
             "name": "simple",
-            "program": "${workspaceFolder}\\simple.js"
+            "program": "${workspaceFolder}\\sort-simple.js"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "push",
-            "program": "${workspaceFolder}\\push.js"
+            "program": "${workspaceFolder}\\sort-push.js"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "pop",
-            "program": "${workspaceFolder}\\pop.js"
+            "program": "${workspaceFolder}\\sort-pop.js"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "controller",
-            "program": "${workspaceFolder}\\controller.js",
-            "args": ['3']
+            "program": "${workspaceFolder}\\sort-controller.js"
         }
         ,
         {
             "type": "python",
             "request": "launch",
             "name": "pop-py",
-            "program": "${workspaceFolder}\\pop.py"
+            "program": "${workspaceFolder}\\sort-pop.py"
+        }
+        ,
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "images-push",
+            "program": "${workspaceFolder}\\images-push.js",
+            "args": ["C:\\Users\\Admin\\Desktop\\bulkr"]
         }
     ]
 }
