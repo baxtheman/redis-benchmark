@@ -1,24 +1,43 @@
-const { createWorker } = require('tesseract.js');
-var as = require('async');
-
+var async = require('async');
 var client = require("redis").createClient({});
+
+const { createWorker } = require('tesseract.js');
+
 var cnt = 0;
 
-as.forever(
+async.forever(
     function (next) {
-        client.BRPOP('images1', 0, function (list, data) {
-            
-            if (data) {
-                console.log(data);
 
-                cnt++;
+        async.waterfall([
+            (callback) =>
+                client.BRPOP('images1', 0, 
+                    (list, data) => {
 
-                if (cnt % 50 == 0) process.stdout.write(".");
-                //console.log(cnt + ': ' + f.join().substring(0, 15));
+                        if (data) {
+                            console.log(data);
+                            cnt++;
+                            if (cnt % 50 == 0) process.stdout.write(".");
+
+                            callback(null, data);
+                        } else {
+                            
+                            callback('no-data');
+                        }
+                    }
+                ),
+
+            (data, callback) => {
+                var key = data[1];
+                client.DEL(key, (err, value) => {
+
+                    console.log('value ' + value);
+
+                    callback();
+                })
             }
+        ],
+        () =>  next());
 
-            next();
-        });
     },
     function (err) {
         console.error(err);

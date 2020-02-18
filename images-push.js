@@ -6,7 +6,6 @@ const cliProgress = require('cli-progress');
 var redis = require("redis");
 const TextChart = require("text-chart");
 
-
 var client = redis.createClient({});
 
 var myArgs = process.argv.slice(2);
@@ -15,12 +14,17 @@ var __DIR = myArgs[0] || './';
 const REDIS_QUEUE = 'images1';
 var N = 0;
 
+console.log('list ' + REDIS_QUEUE);
+
 client.FLUSHALL();
+
 
 async.waterfall([
     sendFiles,
-    waitpop,
-    (wfn) => setTimeout(wfn, 99999)
+    () => {
+        client.quit();
+        process.exit(0);
+    }
 ]);
 
 ///
@@ -46,75 +50,30 @@ function sendFiles(callback) {
                 path.join(__DIR, file));
 
             async.waterfall([
-                (callback) =>
-                    client.HMSET(key, {
-                            file: file,
-                            content: content
-                        }, 
-                        () => callback()
-                    ),
+                function (callback) {
+                    console.log(key);
+                    client.HMSET(key,
+                        "file", file,
+                        "content", content);
+                    callback(null);
+                },
 
-                (callback) =>
+                function (callback) {
+
                     client.LPUSH(REDIS_QUEUE, key,
-                        () => callback()),
+                        () => callback(null));
+                },
 
-                (callback) =>
+                function (callback) {
                     client.PUBLISH('images-push', true,
-                        () => callback())
-            ], () => 
-                eachfn());
+                        () => callback(null));
+                }
+            ], function (err, result) {
+                if (err) console.log(err);
+                eachfn();
+            });
         });
 
-        console.log('all files sent');
-        if (callback) callback(null);
+        console.log('all files sent: ' + images.length);
     });
-}
-
-function waitpop() {
-    perf.start();
-
-    const barChart = new TextChart.BarChart({
-        width: 20
-    });
-    
-    const bar1 = new cliProgress.SingleBar({
-        clearOnComplete: true,
-        stream: process.stdout,
-        hideCursor: true
-    }, cliProgress.Presets.rect);
-
-    bar1.start(N, N);
-
-    async.forever(
-
-        function (next) {
-            var prev = 0;
-            client.LLEN(REDIS_QUEUE, function (err, len) {
-
-                if (len == 0) next('len=0');
-
-                if (prev != len) {
-                    bar1.update(len);
-                    prev = len;
-                }
-
-                setTimeout(next, 1000);
-            });
-        },
-
-        function (err) {
-            bar1.stop();
-            const results2 = Math.round(perf.stop().time);
-
-            barChart.setData([
-                ["pop", results2],
-                ["fps", N / (results2 / 1000)]
-            ]);
-            console.log(barChart.render());
-
-            console.log('QUIT ' + err);
-            client.quit();
-            process.exit(0);
-        }
-    );
-}
+};
