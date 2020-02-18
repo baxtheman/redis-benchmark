@@ -54,7 +54,7 @@ function sendFiles(callbackAll) {
                     console.log(key);
                     client.HMSET(key,
                         "file", file,
-                        "content", content);
+                        "content", content.toString('hex'));
                     callback(null);
                 },
 
