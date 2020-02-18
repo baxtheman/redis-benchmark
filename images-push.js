@@ -29,7 +29,7 @@ async.waterfall([
 
 ///
 
-function sendFiles(callback) {
+function sendFiles(callbackAll) {
 
     //passsing directoryPath and callback function
     fs.readdir(__DIR, function (err, files) {
@@ -72,8 +72,10 @@ function sendFiles(callback) {
                 if (err) console.log(err);
                 eachfn();
             });
-        });
+        }, function() {
 
-        console.log('all files sent: ' + images.length);
+            console.log('all files sent: ' + images.length);
+            callbackAll(null);
+        });
     });
 };

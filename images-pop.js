@@ -1,7 +1,7 @@
 var async = require('async');
 var client = require("redis").createClient({});
 
-const { createWorker } = require('tesseract.js');
+const Tesseract = require('tesseract.js');
 
 var cnt = 0;
 
@@ -9,8 +9,8 @@ async.forever(
     function (next) {
 
         async.waterfall([
-            (callback) =>
-                client.BRPOP('images1', 0, 
+                (callback) =>
+                client.BRPOP('images1', 0,
                     (list, data) => {
 
                         if (data) {
@@ -20,23 +20,34 @@ async.forever(
 
                             callback(null, data);
                         } else {
-                            
+
                             callback('no-data');
                         }
                     }
                 ),
 
-            (data, callback) => {
-                var key = data[1];
-                client.DEL(key, (err, value) => {
+                (data, callback) => {
+                    var key = data[1];
+                    client.hgetall(key, (err, value) => {
 
-                    console.log('value ' + value);
+                        Tesseract.recognize(
+                            value.content,
+                            'eng', {
+                                logger: m => console.log(m)
+                            }
+                        ).then(({
+                            data: {
+                                text
+                            }
+                        }) => {
+                            console.log("TEXT: " + text);
+                        })
 
-                    callback();
-                })
-            }
-        ],
-        () =>  next());
+                        callback();
+                    })
+                }
+            ],
+            () => next());
 
     },
     function (err) {
