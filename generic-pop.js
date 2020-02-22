@@ -1,27 +1,25 @@
 var async = require('async');
+var path = require('path');
 var client = require("redis").createClient({});
-
-const {
-    createWorker
-} = require('tesseract.js')
-const worker = createWorker();
-
-_forever();
 
 var cnt = 0;
 
-async function _forever() {
+var myArgs = process.argv.slice(2);
+var __QUEUE = myArgs[0];
+var __WORKER = myArgs[1];
 
-    await worker.load();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
+var worker = require( path.resolve( __dirname, __WORKER ) );
+
+worker.init();
+
+(function _forever() {
 
     async.forever(
         function (next) {
 
             async.waterfall([
                 (callback) =>
-                client.BRPOP('images1', 0,
+                client.BRPOP(__QUEUE, 0,
                     (list, data) => {
 
                         if (data) {
@@ -43,14 +41,7 @@ async function _forever() {
 
                         var bin = new Buffer(value.content, 'hex');
 
-                        getTextFromImage(bin)
-                            .then(function(data) {
-
-                                console.log("------");
-                                console.log(data);
-                                console.log("------");
-                                callback(null);
-                            })
+                        worker.process(bin);
                     });
                 }
             ], function (err) {
@@ -64,15 +55,6 @@ async function _forever() {
             process.exit(0);
         }
     );
-}
 
-async function getTextFromImage(bin) {
+})();
 
-    const {
-        data: {
-            text
-        }
-    } = await worker.recognize(bin);
-
-    return text
-}
