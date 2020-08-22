@@ -43,7 +43,8 @@ async.forever(
             },
 
             function (rnd, hashed, len, next) {
-                console.log(rnd + ' ' + len);
+
+                console.log(rnd + ' ' + '.'.repeat(len));
 
                 client.LPUSH(_queue, hashed, (ret) => {
 
