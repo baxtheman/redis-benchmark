@@ -12,8 +12,11 @@
     "async": "^3.1.1",
     "cli-progress": "^3.6.0",
     "command-line-args": "^5.1.1",
+    "crypto": "^1.0.1",
     "execution-time": "^1.4.1",
+    "randomstring": "^1.1.5",
     "redis": "^2.8.0",
+    "reverse-md5": "0.0.4",
     "tesseract.js": "^2.0.2",
     "text-chart": "^1.0.8"
   }
