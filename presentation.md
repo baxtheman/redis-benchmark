@@ -14,8 +14,8 @@ Daniele Baggio
 - https://redis.io/   https://github.com/redis/redis
 
 - BSD-licensed open-source, 45K GitHub stars 
-
-- written in C language by Salvatore Sanfillipo and was first released on May 10, 2009
+- written in C language by Salvatore Sanfillipo @antirez
+- first released on May 10, 2009
 
 - The data model is key-value
 
@@ -32,7 +32,6 @@ Daniele Baggio
 - no native GUI, only CLI
 
 
-
 ## Large adoption
 
 Uber Airbnb Pinterest Instagram Udemy Hey Patreon
@@ -41,8 +40,7 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter
 .......
 4,107 companies reported using Redis on StackShare
 ....
-stackoverflow.com has 20k questions (65k for vuejs, )
-
+stackoverflow.com has 20k questions
 
 ## Look inside
 
@@ -95,18 +93,18 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
 - There is no official support for Windows builds (_last version for Windows is 3.6, instead use docker_)
 
-- Redis operates as a single process and is single-threaded
+- Redis operates as a single process and is single-threaded *I LIKE*
 
 - A single Redis instance cannot use parallel execution of tasks
 
-- atomic operations by design
+- all atomic operations *I LIKE*
 
 
 
 
 ## Memory
 
-- An empty instance uses ~ 3MB of memory.
+- An empty instance uses ~ 3MB of memory.  *I LIKE*
 
 - 1 Million Keys -> Hash value, representing an object with 5 fields, use ~ 160 MB of memory
 
@@ -120,6 +118,21 @@ Strings, which can contain any data type, are considered binary safe and have a 
 
 
 
+## Benchmark?
+
+	$ ./redis-benchmark.exe GETSET
+	====== GETSET ======
+	100000 requests completed in 1.17 seconds
+	50 parallel clients
+	3 bytes payload
+	keep alive: 1
+
+	98.84% <= 1 milliseconds
+	99.96% <= 2 milliseconds
+	100.00% <= 2 milliseconds
+	85470.09 requests per second
+
+(i5 2.8Ghz)
 
 ## Persistence
 
@@ -151,20 +164,17 @@ Strings, which can contain any data type, are considered binary safe and have a 
 
 
 
-## High availability
+## High availability (offtopic)
 
-- Yes, but this is offtopic
-
+- Partitioning
+- Cluster
 
 
 ## Commands
 
 - every command is an atomic operation
 
-
-
-
-
+- value is a binary safe string
 
 
 
@@ -172,7 +182,7 @@ Strings, which can contain any data type, are considered binary safe and have a 
 ### Pub/Sub
 
 
-- Redis is a fast and stable Publish/Subscribe messaging system
+- Redis is a fast and stable Publish/Subscribe messaging system *I LIKE*
 
 ### Using Redis as an LRU cache
 
