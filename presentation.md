@@ -57,6 +57,24 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 
 
 
+## Is a database?
+
+- What is a database for you?
+
+- It's a standalone server, cannot 'embedded' in application (sqllite)
+
+- Redis: non safe but VERY efficient 
+- Typical RDBMS: safe but not very efficient
+
+- Redis is not a transactional database (no ACID)
+- There is no rollback
+- Redis has no concurrency problem (dirty read, lost update,..)
+
+- Isolation is always guaranteed at command level
+
+- Foreign key? Referential Integrity? NADA 
+
+
 
 ## Communication
 
@@ -118,13 +136,19 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 Strings, which can contain any data type, are considered binary safe and have a maximum length of 512MB
 
 
-## Data structues
+## Commands & Data structues
+
+- every command is an atomic operation
+
+- value is a binary safe string
 
 ### STRINGS
 
 	SET key1 susanna
 	GET key1
 	DEL key1
+
+	SET user45 "session expire in a minute" EX 60
 
 ### LIST (L prefix)
 
@@ -137,17 +161,22 @@ Strings, which can contain any data type, are considered binary safe and have a 
 
 ## Benchmark?
 
-	$ ./redis-benchmark.exe GETSET
-	====== GETSET ======
-	100000 requests completed in 1.17 seconds
+	$ ./redis-benchmark.exe -d 500 -t set
+	====== SET ======
+	100000 requests completed in 1.29 seconds
 	50 parallel clients
-	3 bytes payload
+	500 bytes payload
 	keep alive: 1
 
-	98.84% <= 1 milliseconds
-	99.96% <= 2 milliseconds
-	100.00% <= 2 milliseconds
-	85470.09 requests per second
+	97.02% <= 1 milliseconds
+	99.87% <= 2 milliseconds
+	99.90% <= 7 milliseconds
+	99.92% <= 8 milliseconds
+	99.95% <= 15 milliseconds
+	99.96% <= 16 milliseconds
+	99.97% <= 17 milliseconds
+	100.00% <= 18 milliseconds
+	77760.50 requests per second
 
 (i5 2.8Ghz)
 
@@ -164,20 +193,20 @@ Strings, which can contain any data type, are considered binary safe and have a 
 	- Write/append a file with every commands which alters the data on Redis
 
 
-## Is a database?
+## Security
 
-- What is a database for you?
+- Redis is designed to be accessed by trusted clients inside trusted environments.
 
-- non safe but very efficient ... safe but not very efficient
+redis.conf
+	bind 127.0.0.1
 
-- Redis is not a transactional database (no ACID)
+- optional tiny layer of authentication 
 
-- There is no rollback
+	AUTH password
 
-- Isolation is always guaranteed at command level
+- NO ACL
 
-- Foreign key? Referential Integrity? NEIN
-
+- optional TLS support
 
 
 
@@ -187,23 +216,21 @@ Strings, which can contain any data type, are considered binary safe and have a 
 - Cluster
 
 
-## Commands
-
-- every command is an atomic operation
-
-- value is a binary safe string
 
 
-
-
-### Pub/Sub
-
+### Pub/Sub 
 
 - Redis is a fast and stable Publish/Subscribe messaging system *I LIKE*
 
-### Using Redis as an LRU cache
+- pretty simple pub/sub
 
-- The LRU caching scheme is to remove the least recently used frame when the cache is full and a new page is referenced which is not there in cache
+- Redis is the broker, clients are publisher or receivers
+
+- Only connected clients receive notification (no retention)
+
+- PUB/SUB + LIST to have Scheduled-task pattern
+
+
 
 
 
