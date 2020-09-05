@@ -87,15 +87,24 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
 
 
-## About CPU
+## How is made
 
-- Redis is single threaded
+- ANSI C only
+
+- Works in most POSIX systems like Linux, xBSD, OS X
+
+- There is no official support for Windows builds (_last version for Windows is 3.6, instead use docker_)
+
+- Redis operates as a single process and is single-threaded
+
+- A single Redis instance cannot use parallel execution of tasks
 
 - atomic operations by design
 
 
 
-## Sizing & limits
+
+## Memory
 
 - An empty instance uses ~ 3MB of memory.
 
@@ -105,13 +114,18 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
 - max limit to memory usage by conf (f this limit is reached Redis will start to reply with an error)
 
+- SET / GET key with string value
+Strings, which can contain any data type, are considered binary safe and have a maximum length of 512MB
+
+
+
 
 
 ## Persistence
 
 - memory first, then disk snapshot
 
-- Redis cares to store them on disk, even if they are always served and modified into the server memory. This means that Redis is fast, but that is also non-volatile.
+- Redis cares to store data on disk, even if they are always served and modified into the server memory. This means that Redis is fast, but that is also non-volatile.
 
 - on-disk storage formats (RDB and AOF) don't need to be suitable for random access, so they are compact
 
@@ -134,6 +148,9 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
 - Foreign key? Referential Integrity? NEIN
 
+
+
+
 ## High availability
 
 - Yes, but this is offtopic
@@ -143,6 +160,12 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 ## Commands
 
 - every command is an atomic operation
+
+
+
+
+
+
 
 
 
