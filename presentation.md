@@ -14,7 +14,7 @@ Daniele Baggio
 - https://redis.io/   https://github.com/redis/redis
 
 - BSD-licensed open-source, 45K GitHub stars 
-- written in C language by Salvatore Sanfillipo @antirez
+- written in C language by Salvatore Sanfillipo @antirez (Catania)
 - first released on May 10, 2009
 
 - The data model is key-value
@@ -31,27 +31,29 @@ Daniele Baggio
 
 - no native GUI, only CLI
 
+- Early adopted by Ruby on rails community to scale web sites 
+![](tweetcyborg.png),
+
 
 ## Large adoption
 
-Uber Airbnb Pinterest Instagram Udemy Hey Patreon
-Twitter Shopify Slack Instacart GitHub Trello Imgur
-Weibo Snapchat Craigslist Digg StackOverflow Kickstarter
-.......
-4,107 companies reported using Redis on StackShare
-....
-stackoverflow.com has 20k questions
+- Twitter
+- Uber Airbnb Pinterest Instagram Udemy Hey Patreon
+ Shopify Slack Instacart GitHub Trello Imgur
+Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
+
+- Redis is the most popular key-value store on the planet (?)
+
 
 ## Look inside
 
-    dump.rdb
-    redis-benchmark.exe
-    redis-cli.exe
     redis-server.exe
+	redis-cli.exe
+	redis-benchmark.exe
+
+	dump.rdb
     redis.conf
     server_log.txt
-
-
 
 
 
@@ -116,6 +118,21 @@ R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 Strings, which can contain any data type, are considered binary safe and have a maximum length of 512MB
 
 
+## Data structues
+
+### STRINGS
+
+	SET key1 susanna
+	GET key1
+	DEL key1
+
+### LIST (L prefix)
+
+### SET (S prefix)
+
+### HASH (H prefx)
+
+
 
 
 ## Benchmark?
@@ -134,17 +151,17 @@ Strings, which can contain any data type, are considered binary safe and have a 
 
 (i5 2.8Ghz)
 
+
+
+
+
 ## Persistence
 
-- memory first, then disk snapshot
+- volatile memory first, hard disk later (if you need)
 
-- Redis cares to store data on disk, even if they are always served and modified into the server memory. This means that Redis is fast, but that is also non-volatile.
-
-- on-disk storage formats (RDB and AOF) don't need to be suitable for random access, so they are compact
-
-- Redis background saving process is always forked when the server is outside of the execution of a command
-
-
+- Redis offers two ways to persist your data:
+	- Dumping in-memory data to disk in compact format.
+	- Write/append a file with every commands which alters the data on Redis
 
 
 ## Is a database?
