@@ -56,7 +56,6 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
     server_log.txt
 
 
-
 ## Is a database?
 
 - What is a database for you?
@@ -195,7 +194,7 @@ highlights:
 
 ### SET (S prefix)
 
-- Sets are containers for unique objects
+- Sets are lists for unique objects
 
 SADD, SCARD, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SPOP, SRANDMEMBER, SREM, SSCAN, SUNION, SUNIONSTORE
 
@@ -203,9 +202,33 @@ SADD, SCARD, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE,
 
 ### HASH (H prefx)
 
-
+	key {
+		subkey1 : value1
+		subkey2 : value2
+		subkey3 : value3
+	}
 
 HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, HSCAN, HSET, HSETNX, HSTRLEN, HVALS
+
+	> hmset user:1000 username antirez birthyear 1977 verified 1
+	OK
+	> hget user:1000 username
+	"antirez"
+	> hget user:1000 birthyear
+	"1977"
+	> hgetall user:1000
+	1) "username"
+	2) "antirez"
+	3) "birthyear"
+	4) "1977"
+	5) "verified"
+	6) "1"
+
+- Note: Redis hash cannot store json
+
+### GEO commands
+
+_offtopic_
 
 
 
@@ -240,6 +263,32 @@ _Note: When latency > throughput, you need multiple requests in flight to bottle
 (i5 2.8Ghz)
 
 
+
+
+### Transactions
+
+- execution of a group of commands in a single step, with two important guarantees:
+
+	- All the commands in a transaction are serialized and executed sequentially
+	- Either all of the commands or none are processed
+	- so a Redis transaction is also atomic
+
+
+	> MULTI
+	OK
+	> INCR foo
+	QUEUED
+	> INCR bar
+	QUEUED
+	> EXEC
+	1) (integer) 1
+	2) (integer) 1
+
+
+## Extensions _offtopic_
+
+- Redis can load Lua scriptS to perform internal data manipulation
+- Sample: there is Lua module to manage JSON data
 
 
 
@@ -295,39 +344,23 @@ redis.conf
 
 
 
-### Transactions
-
-- execution of a group of commands in a single step, with two important guarantees:
-
-	- All the commands in a transaction are serialized and executed sequentially
-	- Either all of the commands or none are processed
-	- so a Redis transaction is also atomic
-
-```
-	> MULTI
-	OK
-	> INCR foo
-	QUEUED
-	> INCR bar
-	QUEUED
-	> EXEC
-	1) (integer) 1
-	2) (integer) 1
-```
 
 
 ## Whe want use cases !!
 
 - Session Cache: Many websites leverage Redis Strings to create a session cache to speed up their website experience 
 
+- User Profiles: Many web applications use Redis Hashes for their user profiles
+
+- Basic Rate Limiting: Building a rate limiter with Redis is an easy because of two commands INCR and EXPIRE. The basic concept is that you want to limit requests to a particular service in a given time period. 
+
+- Distributed job queue is a very popular pattern to process heavy batch work, which can require much 'bigger' (read: expensive) hardware resource to complete. One of the most popular ways to implement a queue is by using three Redis list for waiting, processing and dead letter queue.
+
 - Leaderboards: Forums like Reddit and other voting platforms leverage Redis Lists to add articles to the leaderboard and sort by most voted entries.
 
 - Many online stores use Redis Sets to analyze customer behavior, such as searches or purchases for a specific product category or subcategory
 
 - Redis Sets are a great tool for developers who want to analyze all of the IP addresses that visited a specific website
-
-
-- User Profiles: Many web applications use Redis Hashes for their user profiles
 
 - User Posts: Social platforms like Instagram leverage Redis Hashes to map all the archived user photos or posts back to a single user. The hashing mechanism allows them to look up and return values very quickly, fit the data in memory, and leverage data persistence in the event one of their servers dies.
 
