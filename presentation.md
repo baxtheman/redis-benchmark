@@ -103,6 +103,8 @@ Objective-C OCaml Pascal Perl PHP PL/SQL Pure Data
 Python 
 R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
+- For popular languages, there are many choices
+- every client library is different **ATTENTION**  
 
 
 ## How is made
@@ -155,6 +157,16 @@ Strings, which can contain any data type, are considered binary safe and have a 
 ### SET (S prefix)
 
 ### HASH (H prefx)
+
+
+Sets	SADD, SCARD, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SPOP, SRANDMEMBER, SREM, SSCAN, SUNION, SUNIONSTORE
+
+Hashes	HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, HSCAN, HSET, HSETNX, HSTRLEN, HVALS
+
+Lists	BLPOP, BRPOP, BRPOPLPUSH, LINDEX, LINSERT, LLEN, LPOP, LPUSH, LPUSHX, LRANGE, LREM, LSET, LTRIM, RPOP, RPOPLPUSH, RPUSH, RPUSHX
+
+Strings	APPEND, BITCOUNT, BITFIELD, BITOP, BITPOS, DECR, DECRBY, GET, GETBIT, GETRANGE, GETSET, INCR, INCRBY, INCRBYFLOAT, MGET, MSET, MSETNX, PSETEX, SET, SETBIT, SETEX, SETNX, SETRANGE, STRLEN
+
 
 
 
@@ -230,7 +242,7 @@ redis.conf
 
 - PUB/SUB + LIST to have Scheduled-task pattern
 
-
+- key is the topic, value is the message
 
 
 
