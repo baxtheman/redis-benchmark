@@ -14,10 +14,15 @@ client.DEL(_queue);
 async.forever(
     function (next) {
 
-        var msg = "data--" + _cnt++;
+        var msg = {
+            data: _cnt++,
+            type: 'sample'
+        }
+
         console.log(msg);
 
-        client.PUBLISH(_queue, msg);
+        client.PUBLISH(_queue, 
+            JSON.stringify(msg));
 
         setTimeout(next, _wait);
     }
