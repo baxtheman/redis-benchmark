@@ -3,7 +3,7 @@ var async = require('async');
 var redis = require("redis");
 var client = redis.createClient({});
 
-var _wait = 800;
+var _wait = 100;
 var _queue = 'simple';
 var _cnt = 1;
 
@@ -12,22 +12,13 @@ console.log(_queue);
 client.DEL(_queue);
 
 async.forever(
-    function (forever) {
+    function (next) {
 
-        async.waterfall([
+        var msg = "data--" + _cnt++;
+        console.log(msg);
 
-            function (next) {
+        client.PUBLISH(_queue, msg);
 
-                var msg = "data--" + _cnt++;
-                console.log(msg);
-
-                client.PUBLISH(_queue, msg);
-
-                setTimeout(next, _wait);
-            }
-        ], function (err, result) {
-            
-            forever();
-        })
+        setTimeout(next, _wait);
     }
 );
