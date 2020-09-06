@@ -1,10 +1,13 @@
 import redis
 import string
 
-r = redis.Redis(host='localhost', port=6379)
+r = redis.Redis(host='localhost', port=6379, 
+    decode_responses=True)
+
 ps = r.pubsub()
 
 ps.subscribe('simple')
 
-for new_message in ps.listen():
-    print(new_message)
+for msg in ps.listen():
+    if (msg['type'] == 'message'):
+        print('data>', msg['data'])

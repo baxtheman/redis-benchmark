@@ -18,9 +18,11 @@ async.forever(
 
             function (next) {
 
-                console.log(_cnt);
+                var msg = "data--" + _cnt++;
+                console.log(msg);
 
-                client.PUBLISH(_queue, _cnt++);
+                client.PUBLISH(_queue, msg);
+
                 setTimeout(next, _wait);
             }
         ], function (err, result) {

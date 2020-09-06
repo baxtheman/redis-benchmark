@@ -273,8 +273,10 @@ redis.conf
 
 - Partitioning
 - Cluster
+- Instrumenting... 
 
-
+![](https://cloud.githubusercontent.com/assets/1222339/19412031/897549c6-92da-11e6-84a0-b091f9deb81d.png)
+![](https://cloud.githubusercontent.com/assets/1222339/19412041/dee6d7bc-92da-11e6-84f8-610c025d6182.png)
 
 
 ### Pub/Sub 
