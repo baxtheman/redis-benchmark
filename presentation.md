@@ -104,7 +104,7 @@ Python
 R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
 - For popular languages, there are many choices
-- every client library is different **ATTENTION**  
+- for same language... different client library different behavior **ATTENTION**  
 
 
 ## How is made
@@ -144,29 +144,62 @@ Strings, which can contain any data type, are considered binary safe and have a 
 
 - value is a binary safe string
 
+- key max size is 512MB
+
+- value max size is 512MB
+
+- tip: use key common convention
+	user:432534
+	user:543234:history
+	photo:443233:url
+	list:emails.to.send
+	list:webhook:incoming
+
+
 ### STRINGS
+
+APPEND, BITCOUNT, BITFIELD, BITOP, BITPOS, DECR, DECRBY, GET, GETBIT, GETRANGE, GETSET, INCR, INCRBY, INCRBYFLOAT, MGET, MSET, MSETNX, PSETEX, SET, SETBIT, SETEX, SETNX, SETRANGE, STRLEN
+
+highlights:
 
 	SET key1 susanna
 	GET key1
+	> susanna
 	DEL key1
 
 	SET user45 "session expire in a minute" EX 60
 
+	EXISTS user45
+	> 1
+	EXISTS user45
+	> 0
+
+
+
 ### LIST (L prefix)
+
+BLPOP, BRPOP, BRPOPLPUSH, LINDEX, LINSERT, LLEN, LPOP, LPUSH, LPUSHX, LRANGE, LREM, LSET, LTRIM, RPOP, RPOPLPUSH, RPUSH, RPUSHX
+
+highlights:
+
+	LPUSH list1 1 2 3 4
+	RPOP list1
+	> 1
+	RPOP list1
+	> 2
+
+	BRPOPLPUSH list1 list2
+
+
 
 ### SET (S prefix)
 
+SADD, SCARD, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SPOP, SRANDMEMBER, SREM, SSCAN, SUNION, SUNIONSTORE
+
+
 ### HASH (H prefx)
 
-
-Sets	SADD, SCARD, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SPOP, SRANDMEMBER, SREM, SSCAN, SUNION, SUNIONSTORE
-
-Hashes	HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, HSCAN, HSET, HSETNX, HSTRLEN, HVALS
-
-Lists	BLPOP, BRPOP, BRPOPLPUSH, LINDEX, LINSERT, LLEN, LPOP, LPUSH, LPUSHX, LRANGE, LREM, LSET, LTRIM, RPOP, RPOPLPUSH, RPUSH, RPUSHX
-
-Strings	APPEND, BITCOUNT, BITFIELD, BITOP, BITPOS, DECR, DECRBY, GET, GETBIT, GETRANGE, GETSET, INCR, INCRBY, INCRBYFLOAT, MGET, MSET, MSETNX, PSETEX, SET, SETBIT, SETEX, SETNX, SETRANGE, STRLEN
-
+HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, HSCAN, HSET, HSETNX, HSTRLEN, HVALS
 
 
 

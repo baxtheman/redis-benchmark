@@ -1,7 +1,7 @@
 import redis
 import string
 
-r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.Redis(host='localhost', port=6379)
 ps = r.pubsub()
 
 ps.subscribe('simple')
