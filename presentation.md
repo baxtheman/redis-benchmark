@@ -78,16 +78,15 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 
 ## Communication
 
-- a protocol called RESP (REdis Serialization Protocol). While the protocol was designed specifically for Redis
-
-- RESP is binary-safe 
-
 - A client connects to a Redis server creating a TCP connection to the port 6379.
 
+- NO HTTP
+
+- a protocol called RESP (REdis Serialization Protocol). While the protocol was designed specifically for Redis
+- RESP is binary-safe 
+
 - simple request-response protocol (with some exceptions)
-
 - pipelining , Pub/Sub channel (push protocol)
-
 
 
 
@@ -178,6 +177,8 @@ highlights:
 
 ### LIST (L prefix)
 
+-  List implemented using a Linked List (fast for head & tail)
+
 BLPOP, BRPOP, BRPOPLPUSH, LINDEX, LINSERT, LLEN, LPOP, LPUSH, LPUSHX, LRANGE, LREM, LSET, LTRIM, RPOP, RPOPLPUSH, RPUSH, RPUSHX
 
 highlights:
@@ -194,10 +195,15 @@ highlights:
 
 ### SET (S prefix)
 
+- Sets are containers for unique objects
+
 SADD, SCARD, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SPOP, SRANDMEMBER, SREM, SSCAN, SUNION, SUNIONSTORE
 
 
+
 ### HASH (H prefx)
+
+
 
 HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, HSCAN, HSET, HSETNX, HSTRLEN, HVALS
 
@@ -206,22 +212,30 @@ HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, 
 
 ## Benchmark?
 
-	$ ./redis-benchmark.exe -d 500 -t set
+	$ ./redis-benchmark.exe -d 500 -t set -c 10
 	====== SET ======
-	100000 requests completed in 1.29 seconds
-	50 parallel clients
+	100000 requests completed in 1.14 seconds
+	10 parallel clients
 	500 bytes payload
 	keep alive: 1
 
-	97.02% <= 1 milliseconds
-	99.87% <= 2 milliseconds
-	99.90% <= 7 milliseconds
-	99.92% <= 8 milliseconds
-	99.95% <= 15 milliseconds
-	99.96% <= 16 milliseconds
-	99.97% <= 17 milliseconds
-	100.00% <= 18 milliseconds
-	77760.50 requests per second
+	87336.24 requests per second
+
+
+	$ ./redis-benchmark.exe -d 500 -t set -c 1
+	====== SET ======
+	100000 requests completed in 4.66 seconds
+	1 parallel clients
+	500 bytes payload
+	keep alive: 1
+
+	21454.63 requests per second
+
+
+_Note: When latency > throughput, you need multiple requests in flight to bottleneck on throughput instead of just round-trip latency._
+
+	$ ./redis-cli --latency
+	min: 0, max: 2, avg: 0.30 (1985 samples)
 
 (i5 2.8Ghz)
 
