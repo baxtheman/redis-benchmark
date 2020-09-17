@@ -14,10 +14,14 @@ Daniele Baggio
 - https://redis.io/   https://github.com/redis/redis
 
 - BSD-licensed open-source, 45K GitHub stars 
+
 - written in C language by Salvatore Sanfillipo @antirez (Catania)
-- first released on May 10, 2009
+
+- first released on May 10, 2009; see https://news.ycombinator.com/item?id=494649
 
 - The data model is key-value
+
+- RDBMS is hard to scale, REDIS is born for that
 
 - many different kind of values are supported: Strings, Lists, Sets, Sorted Sets, Hashes, Streams, HyperLogLogs, Bitmaps
 
@@ -37,23 +41,29 @@ Daniele Baggio
 
 ## Large adoption
 
-- Twitter
-- Uber Airbnb Pinterest Instagram Udemy Hey Patreon
- Shopify Slack Instacart GitHub Trello Imgur
+- Instagram, Twitter, Github
+- Uber Airbnb Pinterest Udemy Hey Patreon
+ Shopify Slack Instacart Trello Imgur
 Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
+- Youporn (2003), see https://i.imgur.com/i38JMQa.png
 
-- Redis is the most popular key-value store on the planet (?)
-
+- Redis is the most popular key-value store on the planet (?), see https://i.imgur.com/Bh9BGRR.png
+- Redis has 10 years story
+- Redis lives through NoSql war
 
 ## Look inside
 
     redis-server.exe
+    redis.conf
+
 	redis-cli.exe
 	redis-benchmark.exe
 
-	dump.rdb
-    redis.conf
-    server_log.txt
+## Simple DEMO
+
+.........
+
+
 
 
 ## Is a database?
@@ -62,8 +72,13 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 
 - It's a standalone server, cannot 'embedded' in application (sqllite)
 
-- Redis: non safe but VERY efficient 
-- Typical RDBMS: safe but not very efficient
+- Redis: 
+	- non safe but VERY efficient
+	- many data structures & many manipulation commands
+
+- Typical RDBMS: 
+	- safe but not very efficient
+	- single data model, only insert/update/delete
 
 - Redis is not a transactional database (no ACID)
 - There is no rollback
@@ -71,7 +86,7 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 
 - Isolation is always guaranteed at command level
 
-- Foreign key? Referential Integrity? NADA 
+- Foreign key? Referential Integrity? FORGET! 
 
 
 
@@ -82,7 +97,7 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 - NO HTTP
 
 - a protocol called RESP (REdis Serialization Protocol). While the protocol was designed specifically for Redis
-- RESP is binary-safe 
+- RESP is binary-safe (value is binary safe)
 
 - simple request-response protocol (with some exceptions)
 - pipelining , Pub/Sub channel (push protocol)
@@ -91,54 +106,32 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 
 ## Clients
 
-ActionScript ActiveX/COM+ Bash Boomi 
-C C# C++ 
-Clojure Common Lisp Crystal D Dart Delphi Elixir emacs lisp Erlang Fancy gawk GNU Prolog Go Haskell Haxe Io 
-Java 
-Julia Lasso Lua Matlab mruby Nim 
-Node.js 
-Objective-C OCaml Pascal Perl PHP PL/SQL Pure Data 
-Python 
-R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
+- redis-cli is the first, the standard, the complete coverage client for redis
+- redis-cli is the best tool to understand redis
+
+- language sdk list:
+
+	ActionScript ActiveX/COM+ Bash Boomi 
+	C C# C++ 
+	Clojure Common Lisp Crystal D Dart Delphi Elixir emacs lisp Erlang Fancy gawk GNU Prolog Go Haskell Haxe Io 
+	Java 
+	Julia Lasso Lua Matlab mruby Nim 
+	Node.js 
+	Objective-C OCaml Pascal Perl PHP PL/SQL Pure Data 
+	Python 
+	R Racket Rebol Ruby Rust Scala Scheme Smalltalk Swift Tcl VB VCL Xojo Zig
 
 - For popular languages, there are many choices
 - for same language... different client library different behavior **ATTENTION**  
-
-
-## How is made
-
-- ANSI C only
-
-- Works in most POSIX systems like Linux, xBSD, OS X
-
-- There is no official support for Windows builds (_last version for Windows is 3.6, instead use docker_)
-
-- Redis operates as a single process and is single-threaded *I LIKE*
-
-- A single Redis instance cannot use parallel execution of tasks
-
-- all atomic operations *I LIKE*
+- pay attention to value handling
 
 
 
-
-## Memory
-
-- An empty instance uses ~ 3MB of memory.  *I LIKE*
-
-- 1 Million Keys -> Hash value, representing an object with 5 fields, use ~ 160 MB of memory
-
-- no more physical memory? usually the server will start swapping...
-
-- max limit to memory usage by conf (f this limit is reached Redis will start to reply with an error)
-
-- SET / GET key with string value
-Strings, which can contain any data type, are considered binary safe and have a maximum length of 512MB
 
 
 ## Commands & Data structues
 
-- every command is an atomic operation
+- every command is an atomic operation, No parallel executions
 
 - value is a binary safe string
 
@@ -146,12 +139,13 @@ Strings, which can contain any data type, are considered binary safe and have a 
 
 - value max size is 512MB
 
-- tip: use key common convention
-	user:432534
-	user:543234:history
-	photo:443233:url
-	list:emails.to.send
-	list:webhook:incoming
+
+### Note: open the redis-cli, try commands
+
+### INFO
+
+PING
+INFO
 
 
 ### STRINGS
@@ -264,6 +258,36 @@ _Note: When latency > throughput, you need multiple requests in flight to bottle
 
 
 
+## Memory
+
+- An empty instance uses ~ 3MB of memory.  *I LIKE*
+
+- 1 Million Keys -> Hash value, representing an object with 5 fields, use ~ 160 MB of memory
+
+- no more physical memory? usually the server will start swapping...
+
+- max limit to memory usage by conf (f this limit is reached Redis will start to reply with an error)
+
+- SET / GET key with string value
+Strings, which can contain any data type, are considered binary safe and have a maximum length of 512MB
+
+
+
+## How is made
+
+- ANSI C only
+
+- Works in most POSIX systems like Linux, xBSD, OS X
+
+- There is no official support for Windows builds (_last version for Windows is 3.6, instead use docker_)
+
+- Redis operates as a single process and is single-threaded *I LIKE*
+
+- A single Redis instance CANNOT USE parallel execution of tasks
+
+- all atomic operations *I LIKE*
+
+
 
 ### Transactions
 
@@ -288,9 +312,10 @@ _Note: When latency > throughput, you need multiple requests in flight to bottle
 ## Extensions _offtopic_
 
 - Redis can load Lua scriptS to perform internal data manipulation
-- Sample: there is Lua module to manage JSON data
-
-
+- there is Lua module to manage JSON data
+- there is Lua module to build neural network..
+- there is Lua module to manage geospatial or custom data models
+- search by yourself...
 
 ## Persistence
 
@@ -324,8 +349,8 @@ redis.conf
 - Cluster
 - Instrumenting... 
 
-![](https://cloud.githubusercontent.com/assets/1222339/19412031/897549c6-92da-11e6-84a0-b091f9deb81d.png)
-![](https://cloud.githubusercontent.com/assets/1222339/19412041/dee6d7bc-92da-11e6-84f8-610c025d6182.png)
+__offtopic__
+
 
 
 ### Pub/Sub 
@@ -342,6 +367,8 @@ redis.conf
 
 - key is the topic, value is the message
 
+
+**DEMO TIME**
 
 
 
