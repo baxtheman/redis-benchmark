@@ -11,10 +11,9 @@ http://stable.ascii-flow.appspot.com/#Draw
 
 
 
-# Più potere per la tua applicazione se usi REDIS (?)
+# Scale your application with REDIS 
 
-
-`Io con MySql ciu faccio di tutto, e chemmefrega di altri pseudo database?.....`
+aka `I used to build everything with MySql, and 'chemmefrega about any others db?.....`
 
 
 
