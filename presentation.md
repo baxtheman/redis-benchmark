@@ -4,6 +4,11 @@ Treviso
 Daniele Baggio
 @baxtheman
 
+https://www.eventbrite.it/e/biglietti-piu-potere-per-la-tua-applicazione-se-usi-redis-118820674837
+
+https://textart.io/sequence
+http://stable.ascii-flow.appspot.com/#Draw
+
 
 
 
@@ -343,10 +348,34 @@ redis.conf
 - key is the topic, value is the message
 
 
+	object Prod Redis Cons1 Cons2
+	Prod->Redis: Push data (+ publish)
+
+
+   👨‍💻️👱🙂😊😀
+    |               |         |         |
+    | Push data     |         |         |
+    |-------------->|         |         |
+    |               |         |         |
+    | Push data     |         |         |
+    |-------------->|         |         |
+    |               |         |         |
+    | Publish       |         |         |
+    |-------------->|         |         |
+    |               |         |         |
 
 
 
 ## Whe want use cases !!
+
+### Mine
+
+- Legacy application, a new hope
+
+- Scheduled-task pattern: use the right language to perform the task
+
+
+### Classics
 
 - Session Cache: Many websites leverage Redis Strings to create a session cache to speed up their website experience 
 
