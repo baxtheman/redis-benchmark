@@ -1,19 +1,16 @@
-2020-09-23
-Treviso
+2020-09-23, Treviso
 
-Daniele Baggio
-@baxtheman
-
-https://www.eventbrite.it/e/biglietti-piu-potere-per-la-tua-applicazione-se-usi-redis-118820674837
-
-https://textart.io/sequence
-http://stable.ascii-flow.appspot.com/#Draw
-
-
+Daniele Baggio, @baxtheman
 
 # Scale your application with REDIS 
 
 aka `I used to build everything with MySql, and 'chemmefrega about any others db?.....`
+
+Quote of the day:
+
+	Linus Torvalds, "Talk is cheap. Show me the code"  ?? 
+	Today talk is hard. Who listen?
+
 
 
 
@@ -70,9 +67,10 @@ Weibo Snapchat Craigslist Digg StackOverflow Kickstarter ....
 	redis-cli.exe
 	redis-benchmark.exe
 
+
 ## Simple DEMO
 
-.........
+	Try it together...
 
 
 
